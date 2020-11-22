@@ -3,7 +3,6 @@ package com.work4.Controller;
 import com.work4.Item.Person;
 import com.work4.Item.Table;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -12,7 +11,7 @@ import javax.servlet.http.HttpSession;
 
 public class ChangeController {
     //点击"修改"按钮
-    @GetMapping("/change")
+    @PostMapping("/change")
     public String showChange(@ModelAttribute(value="row")Integer row, HttpServletRequest request, Model model){
         Object flag = request.getSession().getAttribute("login");
         if (null != flag){

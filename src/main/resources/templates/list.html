@@ -8,7 +8,7 @@
         function add() {
             var temp = document.createElement("form")
             temp.action = "/add"
-            temp.method = "get"
+            temp.method = "post"
             temp.style.display = "none"
             document.body.appendChild(temp)
             temp.submit()
@@ -25,7 +25,7 @@
             var row = elem.parentNode.parentNode.rowIndex - 1
             var temp = document.createElement("form")
             temp.action = "/change"
-            temp.method = "get"
+            temp.method = "post"
             temp.style.display = "none"
             //由于form类型的元素没办法设置value值，所以随便创建一个其他类型的元素记录，将row值加载body后面
             var current = document.createElement("textarea")
