@@ -3,7 +3,7 @@ package com.work4.Item;
 import java.io.Serializable;
 
 public class User implements Serializable {
-    private String username, password, message;
+    private String username, password;
 
     public String getUsername(){
         return username;
@@ -11,13 +11,7 @@ public class User implements Serializable {
     public String getPassword(){
         return password;
     }
-    public String getMessage(){
-        return message;
-    }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
     public void setPassword(String password) {
         this.password = password;
     }

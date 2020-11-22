@@ -1,5 +1,6 @@
 package com.work4.Controller;
 
+import com.work4.Item.Table;
 import com.work4.Item.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,15 +34,11 @@ public class LoginController {
     public String checkLogin(User user, Model model, HttpServletRequest request){
         // 用户名密码正确，设置会话中的登陆标志，并进入联系人表格界面, 否则显示错误
         if (user.getUsername().equals("test1122") && user.getPassword().equals("Nov1140")){
-            user.setMessage("您已登录");
             request.getSession().setAttribute("login",1);
             return "redirect:/list";
         }
         else{
-            user.setMessage("用户名或密码错误!");
-            user.setUsername("");
-            user.setPassword("");
-            return login(user, model, request);
+            return "redirect:/login";
         }
     }
 
