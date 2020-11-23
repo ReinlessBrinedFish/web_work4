@@ -2,48 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"><!--自适应宽度和缩放-->
-    <title>Add</title>
-    <script>
-        function check(id)
-        {
-            var elem = document.getElementById(id);     //获取需要检查的标签元素
-            var content = elem.value;                   //获取该标签内容
-            var temp = null;
-            var pattern = elem.pattern;                 //获取该标签已经设置好的正则匹配规则
-            var regex = new RegExp('^' + pattern + '$'); //将pattern加上头尾标识
-            var match = regex.exec(content);              //进行正则匹配
-
-            if (id == 'linker_Name')
-                temp = document.getElementById('pname');
-            else if (id == 'linker_Phone')
-                temp = document.getElementById('pphone');
-            else if (id == 'linker_Email')
-                temp = document.getElementById('pemail');
-            else if (id == 'linker_Address')
-                temp = document.getElementById('paddress');
-            else if (id == 'linker_QQ')
-                temp = document.getElementById('pqq');
-            //内容变为空
-            if ("" == content && temp!=null)
-            {
-                temp.innerHTML = "?";
-                temp.style.color = "#FFA500";
-            }
-            //匹配成功
-            else if (null != match && temp!=null)
-            {
-                temp.innerHTML = "√";
-                temp.style.color = "#00FF00";
-            }
-            //匹配失败
-            else if (null == match && temp!=null)
-            {
-                temp.innerHTML = "×";
-                temp.style.color = "#FF0000";
-            }
-        }
-    </script>
+    <title>添加页面</title>
 </head>
 <body>
 <div>
@@ -53,8 +12,8 @@
             <tr>
                 <td><span>姓名</span></td>
                 <td>
-                    <input type="text" id="linker_Name" th:field="*{name}"
-                           oninput="check('linker_Name')" pattern="[\u4e00-\u9fa5|a-zA-Z|\s*]{2,}"
+                    <input type="text" id="name tf" th:field="*{name}"
+                           oninput="check('name tf')" pattern=".+"
                            placeholder="请输入姓名" required/>
                 </td>
                 <td><p id="pname">请输入姓名</p ></td>
@@ -62,8 +21,8 @@
             <tr>
                 <td><span>电话</span></td>
                 <td>
-                    <input type="text" id="linker_Phone" th:field="*{tel}" maxlength="11"
-                           oninput="check('linker_Phone')" pattern="1\d{10}"
+                    <input type="text" id="mobile tf" th:field="*{tel}" maxlength="11"
+                           oninput="check('mobile tf')" pattern="1\d{10}"
                            placeholder="请输入8位手机号" required/>
                 </td>
                 <td><p id="pphone">请输入电话</p ></td>
@@ -71,8 +30,8 @@
             <tr>
                 <td><span>邮箱</span></td>
                 <td>
-                    <input type="email" id="linker_Email" th:field="*{email}"
-                           oninput="check('linker_Email')" pattern="(\w-*\.*)+@(\w-?)+\.+(com|cn)+"
+                    <input type="email" id="email tf" th:field="*{email}"
+                           oninput="check('email tf')" pattern="(\w-*\.*)+@(\w-?)+\.+(com|cn)+"
                            placeholder="请输入邮箱" required/>
                 </td>
                 <td><p id="pemail">请输入邮箱</p ></td>
@@ -80,7 +39,7 @@
             <tr>
                 <td><span>住址</span></td>
                 <td>
-                    <input type="text" id="linker_Address" th:field="*{address}" oninput="check('linker_Address')"
+                    <input type="text" id="add tf" th:field="*{address}" oninput="check('add tf')"
                            autocomplete="off" maxlength="50" pattern=".+"
                            placeholder="请输入住址" required/>
                 </td>
@@ -89,7 +48,7 @@
             <tr>
                 <td><span>QQ</span></td>
                 <td>
-                    <input type="text" id="linker_QQ" th:field="*{QQ}" oninput="check('linker_QQ')"
+                    <input type="text" id="qq tf" th:field="*{QQ}" oninput="check('qq tf')"
                            maxlength="10" pattern="[0-9]{8,10}"
                            placeholder="请输入QQ号" required/>
                 </td>
@@ -97,10 +56,49 @@
             </tr>
         </table>
         <br>
-        <input type="submit" id="sub" value="提交"
-               style="margin: 0 auto;">
+        <input type="submit" id="sub" value="提交">
         <span class="alert" th:if="${person.message}" th:text="${person.message}"></span>
     </form>
 </div>
+<script>
+    function check(id)
+    {
+        var elem = document.getElementById(id);     //获取需要检查的标签元素
+        var content = elem.value;                   //获取该标签内容
+        var temp = null;
+        var pattern = elem.pattern;                 //获取该标签已经设置好的正则匹配规则
+        var regex = new RegExp('^' + pattern + '$'); //将pattern加上头尾标识
+        var match = regex.exec(content);              //进行正则匹配
+
+        if (id === 'name tf')
+            temp = document.getElementById('pname');
+        else if (id === 'mobile tf')
+            temp = document.getElementById('pphone');
+        else if (id === 'email tf')
+            temp = document.getElementById('pemail');
+        else if (id === 'add tf')
+            temp = document.getElementById('paddress');
+        else if (id === 'qq tf')
+            temp = document.getElementById('pqq');
+        //内容变为空
+        if ("" === content && temp!=null)
+        {
+            temp.innerHTML = "?";
+            temp.style.color = "#FFA500";
+        }
+        //匹配成功
+        else if (null != match && temp!=null)
+        {
+            temp.innerHTML = "√";
+            temp.style.color = "#00FF00";
+        }
+        //匹配失败
+        else if (null == match && temp!=null)
+        {
+            temp.innerHTML = "×";
+            temp.style.color = "#FF0000";
+        }
+    }
+</script>
 </body>
 </html>

@@ -50,12 +50,11 @@
             temp.submit()
         }
         function change(elem) {
-            var row = elem.parentNode.parentNode.rowIndex - 1
+            var row = elem.parentNode.parentNode.rowIndex-1 //直接获取该行数据
             var temp = document.createElement("form")
             temp.action = "/change"
             temp.method = "post"
             temp.style.display = "none"
-            //由于form类型的元素没办法设置value值，所以随便创建一个其他类型的元素记录，将row值加载body后面
             var current = document.createElement("textarea")
             current.name = "row"
             current.value = row.toString()
@@ -63,23 +62,20 @@
             document.body.appendChild(temp)
             temp.submit()
         }
-
         function del(elem) {
-            var li = elem.parentNode.parentNode
-            var ul = li.parentNode
-            ul.removeChild(li)
-
-            var row = $(li).index()-1
-
+            var row = elem.parentNode.parentNode.rowIndex
+            var tr = elem.parentNode.parentNode
+            var tbody = tr.parentNode
             var temp = document.createElement("form")
             temp.action = "/del"
-            temp.method = "get"
+            temp.method = "post"
             temp.style.display = "none"
             var opt = document.createElement("textarea")
             opt.name = "row"
             opt.value = row.toString()
             temp.appendChild(opt)
             document.body.appendChild(temp)
+            tbody.removeChild(tr)
             temp.submit()
         }
     </script>
@@ -181,43 +177,50 @@
     <div id="list" class="panel_list " style="">
         <h2>测试案例</h2>
 
-        <div ui-type="list">
+        <div ui-type="list" id="person_list">
+            <!--使用li获取元素需要绑定click事件啥的好麻烦啊不会-->
             <ul ui-type="innerlist">
+            <table>
                 <!--列表头-->
-                <li ui-type="column-header" class="column_header" data-type="normal">
-                    <span class="num tf">
-                        <span class="tf" data-sorttype="num" data-type="normal">序号<span class="ico_sort_down">↓</span></span>
-                    </span>
-                    <span class="name tf">
-                        <span class="tf" data-sorttype="name" data-type="normal">姓名<span class="ico_sort_down">↓</span></span>
-                    </span>
-                    <span class="mobile tf">
-                        <span class="pointer" data-sorttype="tel" data-type="normal">电话<span class="ico_sort_down">↓</span></span>
-                    </span>
-                    <span class="email tf">
-                        <span class="pointer" data-sorttype="mail" data-type="normal">邮箱<span class="ico_sort_down">↓</span></span>
-                    </span>
-                    <span class="qq tf">
-                        <span class="pointer" data-sorttype="qq" data-type="normal">QQ<span class="ico_sort_down">↓</span></span>
-                    </span>
-                    <span class="add tf">
-                        <span class="pointer" data-sorttype="add" data-type="normal">地址<span class="ico_sort_down">↓</span></span>
-                    </span>
-                </li>
+                <thead ui-type="column-header" class="column_header" data-type="normal">
+                    <tr>
+                        <td class="num tf">
+                            <span class="tf" data-sorttype="num" data-type="normal">序号<span class="ico_sort_down">↓</span></span>
+                        </td>
+                        <td class="name tf">
+                            <span class="tf" data-sorttype="name" data-type="normal">姓名<span class="ico_sort_down">↓</span></span>
+                        </td>
+                        <td class="mobile tf">
+                            <span class="pointer" data-sorttype="tel" data-type="normal">电话<span class="ico_sort_down">↓</span></span>
+                        </td>
+                        <td class="email tf">
+                            <span class="pointer" data-sorttype="mail" data-type="normal">邮箱<span class="ico_sort_down">↓</span></span>
+                        </td>
+                        <td class="qq tf">
+                            <span class="pointer" data-sorttype="qq" data-type="normal">QQ<span class="ico_sort_down">↓</span></span>
+                        </td>
+                        <td class="add tf">
+                            <span class="pointer" data-sorttype="add" data-type="normal">地址<span class="ico_sort_down">↓</span></span>
+                        </td>
+                    </tr>
+                </thead>
 
                 <!--列表内容-->
-                <li ui-type="column" th:data-id="${session.table.getSize()}" th:each="p, pStatus: ${session.table.getTable()}" data-type="normal" class="list_item">
-                    <span class="num tf" data-sorttype="num"><a th:text="${pStatus.count}"></a></span>
-                    <span class="name tf" data-sorttype="name"><a th:text="${p.getName()}"></a></span>
-                    <span class="mobile tf" data-sorttype="mobile"><a th:text="${p.getTel()}"></a></span>
-                    <span class="email tf" data-sorttype="email"><a th:text="${p.getEmail()}"></a></span>
-                    <span class="qq tf" data-sorttype="qq"><a th:text="${p.getQQ()}"></a></span>
-                    <span class="add tf" data-sorttype="add"><a th:text="${p.getAddress()}"></a></span>
-                    <span>
-                        <button class="btn_gray btn_space btn_edit" onclick="change(this)" title="编辑联系人">编辑</button>
-                        <button class="btn_gray btn_space btn_delete" onclick="del(this)" title="删除联系人">删除</button>
-                    </span>
-                </li>
+                <tbody>
+                    <tr ui-type="column" th:data-id="${session.table.getSize()}" th:each="p, pStatus: ${session.table.getTable()}" data-type="normal" class="list_item">
+                        <td class="num tf" data-sorttype="num"><a th:text="${pStatus.count}"></a></td>
+                        <td class="name tf" data-sorttype="name"><a th:text="${p.getName()}"></a></td>
+                        <td class="mobile tf" data-sorttype="mobile"><a th:text="${p.getTel()}"></a></td>
+                        <td class="email tf" data-sorttype="email"><a th:text="${p.getEmail()}"></a></td>
+                        <td class="qq tf" data-sorttype="qq"><a th:text="${p.getQQ()}"></a></td>
+                        <td class="add tf" data-sorttype="add"><a th:text="${p.getAddress()}"></a></td>
+                        <td style="border: 0;">
+                            <button class="btn_gray btn_space btn_edit" onclick="change(this)" title="编辑联系人">编辑</button>
+                            <button class="btn_gray btn_space btn_delete" onclick="del(this)" title="删除联系人">删除</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
             </ul>
         </div>
     </div>

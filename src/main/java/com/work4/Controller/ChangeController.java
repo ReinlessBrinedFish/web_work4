@@ -2,6 +2,7 @@ package com.work4.Controller;
 
 import com.work4.Item.Person;
 import com.work4.Item.Table;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+@Controller
 public class ChangeController {
     //点击"修改"按钮
     @PostMapping("/change")
@@ -19,7 +21,9 @@ public class ChangeController {
             Table table = (Table)session.getAttribute("table");
             Person person = table.getTable().elementAt(row);
             model.addAttribute("person", person);
-            return "change";
+            table.getTable().remove(row);
+            session.setAttribute("table", table);
+            return "/change";
         } else {
             return "redirect:/login";
         }
