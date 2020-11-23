@@ -1,9 +1,37 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>table</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="save" content="history">
+    <title>通讯录列表</title>
+    <!--css太长了，需要浏览器自动联网下载-->
+    <link rel="stylesheet" type="text/css" href="https://rescdn.qqmail.com/zh_CN/htmledition/style/comm2010511a8f.css">
+    <link rel="stylesheet" type="text/css" href="https://rl.mail.qq.com/cgi-bin/getcss?sid=9q-pMAtpEd9bVgxT&amp;ft=skin">
+    <link rel="stylesheet" type="text/css" id="contactStyle" href="https://rescdn.qqmail.com/zh_CN/htmledition/style/contacts2013493dc5.css">
+    <style type="text/css">
+        .widescreen .panel_list .num {
+            width: 3%;
+        }
+        .widescreen .panel_list .name {
+            width: 10%;
+        }
+
+        .widescreen .panel_list .mobile {
+            width: 15%;
+        }
+
+        .widescreen .panel_list .email {
+            width: 32%;
+        }
+
+        .widescreen .panel_list .qq {
+            width: 15%;
+        }
+
+        .widescreen .panel_list .add {
+            width: 25%;
+        }
+    </style>
     <script>
         function add() {
             var temp = document.createElement("form")
@@ -37,10 +65,12 @@
         }
 
         function del(elem) {
-            //第一次parentNode得到td标签的位置，第二次parentNode得到tr标签的位置
-            var row = elem.parentNode.parentNode.rowIndex -1
-            var tr = elem.parentNode.parentNode
-            var tbody = tr.parentNode
+            var li = elem.parentNode.parentNode
+            var ul = li.parentNode
+            ul.removeChild(li)
+
+            var row = $(li).index()-1
+
             var temp = document.createElement("form")
             temp.action = "/del"
             temp.method = "get"
@@ -50,43 +80,150 @@
             opt.value = row.toString()
             temp.appendChild(opt)
             document.body.appendChild(temp)
-            //找到tr标签后删掉
-            tbody.removeChild(tr)
             temp.submit()
         }
     </script>
 </head>
-<body>
-<div class="content">
-    <table>
-        <thead>
-        <tr>
-            <td>姓名</td>
-            <td>电话</td>
-            <td>邮箱</td>
-            <td>住址</td>
-            <td>QQ</td>
-        </tr>
-        </thead>
-        <tbody>
-        <!--循环迭代对象Thymeleaf的th:each，通过传入的getTableInfo这个Vector可以将各个行展现出来-->
-        <tr th:each="m:${session.table.getTable()}">
-            <td th:text="${m.getName()}"></td>
-            <td th:text="${m.getTel()}"></td>
-            <td th:text="${m.getEmail()}"></td>
-            <td th:text="${m.getAddress()}"></td>
-            <td th:text="${m.getQQ()}"></td>
-            <td style="border: 0;">
-                <button class="changebutton" onclick="change(this)">编 辑</button>
-                <button class="delbutton" onclick="del(this)">删 除</button>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <div class="change_div">
-        <button class="addbutton" onclick="add()">添 加</button>
-        <button class="exit" onclick="exit()">退出系统</button>
+<body class="widescreen">
+<script type="text/javascript">
+    getTop().switchFolder("folder_");
+    function onpageresize() {
+        if(document.body.clientWidth > 1003) {
+            !getTop().hasClass(document.body, "widescreen") && getTop().addClass(document.body, "widescreen");
+        }
+        else {
+            getTop().hasClass(document.body, "widescreen") && getTop().rmClass(document.body, "widescreen");
+        }
+    }
+    onpageresize();
+</script>
+<div id="out" class="contacts" ui-type="outter">
+    <div id="bar" class="panel_fixed" style="">
+        <div ui-type="nav">
+            <!--联系人编辑头-->
+            <div class="nav_list toolbg toolbgline toolheight">
+                <!--右部联系人搜索框-->
+                <div class="search">
+                    <form>
+                        <input name="keyword" id="keyword" autocomplete="off" class="txt_search" type="text"
+                               onfocus="if(this.placeholder == '搜索全部联系人'){  this.placeholder = '';}this.parentNode.className='focus_search';"
+                               onblur="if(this.value == ''){this.placeholder = '搜索全部联系人';}this.parentNode.className='';"
+                               placeholder="搜索全部联系人">
+                        <a href="javascript:;" class="btn_search btn_gray" title="搜索">
+                            <em class="ico_search"></em>
+                        </a>
+                    </form>
+                </div>
+
+                <!--左部联系人编辑栏-->
+                <div class="tool">
+                    <a href="javascript:;" class="btn_add btn_blue btn_space" title="添加联系人" onclick="add()">
+                        <em class="ico_add"></em>
+                    </a>
+                    <a href="javascript:exit()" class="btn_gray btn_space btn_delete" title="退出登录">登出</a>
+                </div>
+            </div>
+
+            <!--右侧联系人分组表头-->
+            <div class="nav_mask">
+            </div>
+        </div>
     </div>
+
+    <!--右侧联系人分组表单-->
+    <!--一个分组切换一次子页面-->
+    <div id="group" class="panel_groups" style="margin-top: 0px;">
+        <div class="mysidebar">
+            <h3 class="groups_default"><a class="f_size right normal" href="javascript:;">新建分组</a>通讯录</h3>
+            <ul class="navlist_min">
+                <li class="fn">
+                    <a href="https://www.baidu.com/">全部(<span ui-type="groupcnt" data-id="0" class="inline_block">数量</span>)</a>
+                </li>
+            </ul>
+
+            <h3>重要联系人</h3>
+            <ul class="navlist_min">
+                <li class="fs">
+                    <a href="https://www.baidu.com/">历史联系人(<span ui-type="groupcnt" data-id="-110" class="inline_block">数量</span>)</a>
+                </li>
+            </ul>
+
+            <h4>分组</h4>
+            <ul class="navlist_min navlist_qq">
+                <li class="fs">
+                    <a href="https://www.baidu.com/">
+                        <span ui-type="grouptitle">家人</span>(<span ui-type="groupcnt" data-type="normal" data-id="1000000" class="inline_block">数量</span>)
+                    </a>
+                </li>
+
+                <li class="fs">
+                    <a href="https://www.baidu.com/">
+                        <span ui-type="grouptitle">朋友</span>(<span ui-type="groupcnt" data-type="normal" data-id="1000001" class="inline_block">数量</span>)
+                    </a>
+                </li>
+
+                <li class="fs">
+                    <a href="https://www.baidu.com/">
+                        <span ui-type="grouptitle">工作</span>(<span ui-type="groupcnt" data-type="normal" data-id="1000002" class="inline_block">数量</span>)
+                    </a>
+                </li>
+
+                <li class="fs">
+                    <a href="https://www.baidu.com/">
+                        <span ui-type="grouptitle">其他</span>(<span ui-type="groupcnt" data-type="normal" data-id="1000003" class="inline_block">数量</span>)
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!--主体联系人信息表-->
+    <div id="list" class="panel_list " style="">
+        <h2>测试案例</h2>
+
+        <div ui-type="list">
+            <ul ui-type="innerlist">
+                <!--列表头-->
+                <li ui-type="column-header" class="column_header" data-type="normal">
+                    <span class="num tf">
+                        <span class="tf" data-sorttype="num" data-type="normal">序号<span class="ico_sort_down">↓</span></span>
+                    </span>
+                    <span class="name tf">
+                        <span class="tf" data-sorttype="name" data-type="normal">姓名<span class="ico_sort_down">↓</span></span>
+                    </span>
+                    <span class="mobile tf">
+                        <span class="pointer" data-sorttype="tel" data-type="normal">电话<span class="ico_sort_down">↓</span></span>
+                    </span>
+                    <span class="email tf">
+                        <span class="pointer" data-sorttype="mail" data-type="normal">邮箱<span class="ico_sort_down">↓</span></span>
+                    </span>
+                    <span class="qq tf">
+                        <span class="pointer" data-sorttype="qq" data-type="normal">QQ<span class="ico_sort_down">↓</span></span>
+                    </span>
+                    <span class="add tf">
+                        <span class="pointer" data-sorttype="add" data-type="normal">地址<span class="ico_sort_down">↓</span></span>
+                    </span>
+                </li>
+
+                <!--列表内容-->
+                <li ui-type="column" th:data-id="${session.table.getSize()}" th:each="p, pStatus: ${session.table.getTable()}" data-type="normal" class="list_item">
+                    <span class="num tf" data-sorttype="num"><a th:text="${pStatus.count}"></a></span>
+                    <span class="name tf" data-sorttype="name"><a th:text="${p.getName()}"></a></span>
+                    <span class="mobile tf" data-sorttype="mobile"><a th:text="${p.getTel()}"></a></span>
+                    <span class="email tf" data-sorttype="email"><a th:text="${p.getEmail()}"></a></span>
+                    <span class="qq tf" data-sorttype="qq"><a th:text="${p.getQQ()}"></a></span>
+                    <span class="add tf" data-sorttype="add"><a th:text="${p.getAddress()}"></a></span>
+                    <span>
+                        <button class="btn_gray btn_space btn_edit" onclick="change(this)" title="编辑联系人">编辑</button>
+                        <button class="btn_gray btn_space btn_delete" onclick="del(this)" title="删除联系人">删除</button>
+                    </span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="search" class="panel_list" style="display:none;"></div>
+    <div id="con" class="panel_edit settingtable qqshowbd" style="display:none;"></div>
 </div>
 </body>
 </html>

@@ -8,9 +8,9 @@ public class Table implements Serializable {
     //对应初始化列表
     public Table() {
         tableinfo = new Vector<Person>();
-        tableinfo.add(new Person("XXX", "134XXXXXXXX", "XXXXXXXXXX@qq.com", "北京市海淀区北太平庄街道西土城路10号", "XXXXXXXXXX"));
-        tableinfo.add(new Person("XXX", "134XXXXXXXX", "XXXXXXXXXX@qq.com", "北京市海淀区北太平庄街道西土城路10号", "XXXXXXXXXX"));
-        tableinfo.add(new Person("XXX", "134XXXXXXXX", "XXXXXXXXXX@qq.com", "北京市海淀区北太平庄街道西土城路10号", "XXXXXXXXXX"));
+        tableinfo.add(new Person("XXX", "134XXXXXXXX", "XXXXXXXXXX@qq.com", "北京市", "XXXXXXXXXX"));
+        tableinfo.add(new Person("XXX", "134XXXXXXXX", "XXXXXXXXXX@qq.com", "北京市", "XXXXXXXXXX"));
+        tableinfo.add(new Person("XXX", "134XXXXXXXX", "XXXXXXXXXX@qq.com", "北京市", "XXXXXXXXXX"));
     }
 
     public Vector<Person> addPerson(Person person) {
@@ -23,5 +23,7 @@ public class Table implements Serializable {
         return tableinfo;
     }
     
-    public int getSize() { return tableinfo.size(); }
+    public int getSize() {
+        return tableinfo.size();
+    }
 }

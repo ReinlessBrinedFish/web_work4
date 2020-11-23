@@ -15,16 +15,16 @@ public class DelController {
         Object flag = request.getSession().getAttribute("login");
         if (null != flag){
             HttpSession session = request.getSession();
-            if (null == session.getAttribute("table")) {
-                Table table = new Table();
-                session.setAttribute("table", table);
-            }
             Table table = (Table)session.getAttribute("table");
-            // 只有一个删掉会报错
-            if (table.getSize() > 1) {
-                table.getTable().remove(index-1);
-                session.setAttribute("table", table);
+            if (null == table) {
+                Table t = new Table();
+                table = t;
             }
+            // 只有一个删掉会报错
+            if (table.getSize() > 0) {
+                table.getTable().remove(index-1);
+            }
+            session.setAttribute("table", table);
             return "redirect:/list";
         } else {
             return "login";
